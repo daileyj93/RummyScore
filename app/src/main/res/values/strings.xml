@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Rummy Score</string>
+    <string name="players">Players</string>
+    <string name="add_player">Add Player</string>
+    <string name="rummy_score">Rummy Score</string>
+    <string name="new_game">New Game</string>
+    <string name="saved_games">Saved Games</string>
+    <string name="start_game">Start Game</string>
+</resources>
