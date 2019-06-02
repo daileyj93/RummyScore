@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    //new game button click
     public void onButtonNewGameClick(View view){
         Intent intent = new Intent(this, CreateScoreCardActivity.class);
         startActivity(intent);

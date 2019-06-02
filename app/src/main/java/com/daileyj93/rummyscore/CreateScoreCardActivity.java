@@ -7,15 +7,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class CreateScoreCardActivity extends AppCompatActivity {
-    public final static String EXTRA_PLAYERS = "com.daileyj93.rummyscore.PLAYERS";
+    public final static String EXTRA_SCORECARD = "com.daileyj93.rummyscore.SCORECARD";
 
     private EditText editPlayerName;
-    private ArrayList<String> playerListData;
     private ArrayList<Player> playerList;
     private RecyclerView playerListView;
     RecyclerViewAdapter adapter;
@@ -25,19 +23,18 @@ public class CreateScoreCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_score_card);
 
+        //create player list recycler view and adapter
         playerList = new ArrayList<>();
-
-        playerList.add(new Player("bob"));
-
         playerListView = findViewById(R.id.playerListView);
         playerListView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RecyclerViewAdapter(this, playerList);
         playerListView.setAdapter(adapter);
 
-        //textPlayerList = findViewById(R.id.textPlayerList);
+        //editText to enter new player name
         editPlayerName = findViewById(R.id.editPlayerName);
     }
 
+    //adds a new player from the textEdit to the playerList
     public void onButtonAddPlayerClick(View view){
         String name = editPlayerName.getText().toString();
         editPlayerName.setText("");
@@ -50,9 +47,10 @@ public class CreateScoreCardActivity extends AppCompatActivity {
         }
     }
 
+    //creates the scorecard and passes it to the scoreCardLayoutActivity
     public void onButtonStartGameClick(View view){
         Intent intent = new Intent(this, ScoreCardLayout.class);
-        intent.putExtra(EXTRA_PLAYERS, new PlayerList(playerList));
+        intent.putExtra(EXTRA_SCORECARD, new ScoreCard(playerList, 500));
 
         startActivity(intent);
     }

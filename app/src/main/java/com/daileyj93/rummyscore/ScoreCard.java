@@ -1,17 +1,24 @@
 package com.daileyj93.rummyscore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScoreCard {
+public class ScoreCard implements Serializable {
+    public ArrayList<Player> playerList;
     public Map<Player, ArrayList<Integer>> playerScores;
+    public Integer maxGameScore;
+    public Integer rounds;
 
-    public ScoreCard(ArrayList<Player> playersList){
+    public ScoreCard(ArrayList<Player> players, Integer maxScore){
+        playerList = players;
         playerScores = new HashMap<>();
-        for (Player p : playersList) {
+        for (Player p : playerList) {
             playerScores.put(p, new ArrayList<Integer>());
         }
+        maxGameScore = maxScore;
+        rounds = 0;
     }
 
     public void addScore(Player p, Integer score){
