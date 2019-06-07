@@ -1,26 +1,18 @@
 package com.daileyj93.rummyscore;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-public class RecyclerViewScoreAdapter extends RecyclerView.Adapter<RecyclerViewScoreAdapter.ViewHolder> {
+public class RecyclerViewScoreAdapter extends RecyclerView.Adapter<RecyclerViewScoreAdapter.ViewHolder>{
     private ScoreCard scoreCard;
     private ScoreCardLayout scoreCardLayout;
 
-    //constructor initializes inflater and player list
+    //constructor sets the scoreCardLayout and scoreCard
     RecyclerViewScoreAdapter(ScoreCardLayout cardLayout){
         this.scoreCardLayout = cardLayout;
         this.scoreCard = scoreCardLayout.getScoreCard();
@@ -36,7 +28,14 @@ public class RecyclerViewScoreAdapter extends RecyclerView.Adapter<RecyclerViewS
     //called when data is bonded to ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewScoreAdapter.ViewHolder holder, int position) {
-        holder.roundTextView.setText(String.valueOf(position));
+        if((position == getItemCount() - 1) && scoreCardLayout.doSetLastForNewRound) {
+            holder.scoreCardRow.setForNewRound();
+            scoreCardLayout.doSetLastForNewRound = false;
+        }
+        else
+            holder.scoreCardRow.setForPrevRound();
+
+        holder.roundTextView.setText(String.valueOf(position + 1));
         for (Player p: scoreCard.playerList) {
             String scoreStr = scoreCard.playerScores.get(p).get(position).toString();
             holder.scoreTextViews.get(p).setText(scoreStr);
@@ -49,22 +48,28 @@ public class RecyclerViewScoreAdapter extends RecyclerView.Adapter<RecyclerViewS
     }
 
     //ViewHolder class
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        ScoreCardLayout.ScoreCardRow scoreCardRow;
         Map<Player, TextView> scoreTextViews;
+        Map<Player, EditText> scoreEditTexts;
         TextView roundTextView;
 
-        //creates a textView from the playerlistrow layout
+        //constructor creates textViews from the player_list_row layout
         ViewHolder(ScoreCardLayout.ScoreCardRow scoreCardRow) {
             super(scoreCardRow.llScoreRow);
+            this.scoreCardRow = scoreCardRow;
             roundTextView = scoreCardRow.roundTextView;
             scoreTextViews = scoreCardRow.scoreTextViews;
+            scoreEditTexts = scoreCardRow.scoreEditTexts;
             scoreCardRow.llScoreRow.addView(roundTextView);
-            Iterator it = scoreTextViews.entrySet().iterator();
-            while(it.hasNext()){
-                Map.Entry pair = (Map.Entry) it.next();
-                scoreCardRow.llScoreRow.addView((TextView)pair.getValue());
+
+            //loops through scoreTextViews and adds them to the scoreRow
+            for(Player p : scoreCard.playerList){
+                scoreCardRow.llScoreRow.addView(scoreTextViews.get(p));
+                scoreCardRow.llScoreRow.addView(scoreEditTexts.get(p));
             }
         }
+
     }
 
 }

@@ -1,10 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/score_card_layout_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScoreCardLayout">
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/score_round_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="onScoreRoundButtonClick"
+        android:text="@string/score_round"
+        android:background="@drawable/score_round_button_bg"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/background_shade_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"></LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/score_card_layout_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ScoreCardLayout">
+
+            <LinearLayout
+                android:id="@+id/labelRowView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"></LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/scoreListView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".5" />
+
+
+            <LinearLayout
+                android:id="@+id/labelTotalView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"></LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

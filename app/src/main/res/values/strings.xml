@@ -6,4 +6,6 @@
     <string name="new_game">New Game</string>
     <string name="saved_games">Saved Games</string>
     <string name="start_game">Start Game</string>
+    <string name="score_round">Score Round</string>
+    <string name="player_file_name">players.dat</string>
 </resources>
