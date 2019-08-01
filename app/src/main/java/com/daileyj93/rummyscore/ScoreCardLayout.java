@@ -198,22 +198,53 @@ public class ScoreCardLayout extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_save){
+			//load all scorecards
+			FileInputStream fis = null;
+			ObjectInputStream is = null;
+
+			gamesList = new ArrayList<>();
+			try {
+				fis = this.getBaseContext().openFileInput(
+						getResources().getString(R.string.games_file_name));
+				is = new ObjectInputStream(fis);
+				boolean cont = true, overWrite = false;
+				while(cont) {
+					ScoreCard game = (ScoreCard) is.readObject();
+					if(game != null) {
+						if(scoreCard.id.equals(game.id)){
+							overWrite = true;
+							gamesList.add(scoreCard);
+						}
+						else gamesList.add(game);
+					}
+					else cont = false;
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if(is != null) is.close();
+					if(fis != null) fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
             //save the scorecard
             FileOutputStream fos = null;
             ObjectOutputStream os = null;
             try {
-                File temp = new File(this.getFilesDir(), getResources().getString(R.string.games_file_name));
-                boolean fileExists = temp.exists();
-
                 fos = this.getBaseContext().openFileOutput(
                         getResources().getString(R.string.games_file_name),
                         Context.MODE_PRIVATE);
-                Log.e("EXISTS", " " + fileExists);
-                if(fileExists)
-                    os = new AppendingObjectOutputStream(fos);
-                else
-                    os = new ObjectOutputStream(fos);
-                os.writeObject(scoreCard);
+                os = new ObjectOutputStream(fos);
+				for(ScoreCard game : gamesList){
+					os.writeObject(scoreCard);
+				}
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

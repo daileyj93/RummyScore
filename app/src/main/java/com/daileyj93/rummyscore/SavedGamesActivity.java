@@ -29,7 +29,7 @@ public class SavedGamesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_games);
 
-        //create and load playerList
+        //create and load gamesList
         FileInputStream fis = null;
         ObjectInputStream is = null;
 

@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ScoreCard implements Serializable {
+	public UUID id;
     public Date date;
     public ArrayList<Player> playerList;
     public Map<Player, ArrayList<Integer>> playerScores;
@@ -16,6 +18,7 @@ public class ScoreCard implements Serializable {
     public Integer rounds;
 
     public ScoreCard(ArrayList<Player> players, Integer maxScore){
+		id = UUID.randomUUID();
         date = new Date();
         playerList = players;
         playerScores = new HashMap<>();
