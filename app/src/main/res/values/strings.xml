@@ -8,4 +8,8 @@
     <string name="start_game">Start Game</string>
     <string name="score_round">Score Round</string>
     <string name="player_file_name">players.dat</string>
+    <string name="action_save">Save Scorecard</string>
+    <string name="title_activity_saved_games">SavedGamesActivity</string>
+    <string name="games_file_name">savedgames.dat</string>
+    <string name="load_game">Load Game</string>
 </resources>

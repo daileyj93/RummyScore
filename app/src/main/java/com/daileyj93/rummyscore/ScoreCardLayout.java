@@ -7,10 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -18,6 +21,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,6 +37,7 @@ public class ScoreCardLayout extends AppCompatActivity {
     private Map<Player, TextView> scoreTotalTextViews;
     private Button scoreRoundButton;
     private RecyclerView scoreListView;
+    private Toolbar toolbar;
 
     public RecyclerViewScoreAdapter adapter;
     public boolean doSetLastForNewRound;
@@ -37,6 +46,9 @@ public class ScoreCardLayout extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_card_layout);
+
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
         scoreCard = (ScoreCard) intent.getSerializableExtra(EXTRA_SCORECARD);
@@ -75,6 +87,12 @@ public class ScoreCardLayout extends AppCompatActivity {
         for (Player p: scoreCard.playerList) {
             scoreTotalTextViews.put(p, addLabel(llLabelTotal, scoreCard.getTotal(p).toString()));
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     //adds shaded columns in background
@@ -172,6 +190,44 @@ public class ScoreCardLayout extends AppCompatActivity {
         scoreRoundButton.setText(R.string.score_round);
         addRound();
         doSetLastForNewRound = true;
+    }
+
+    //on actionbar click
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_save){
+            //save the scorecard
+            FileOutputStream fos = null;
+            ObjectOutputStream os = null;
+            try {
+                File temp = new File(this.getFilesDir(), getResources().getString(R.string.games_file_name));
+                boolean fileExists = temp.exists();
+
+                fos = this.getBaseContext().openFileOutput(
+                        getResources().getString(R.string.games_file_name),
+                        Context.MODE_PRIVATE);
+                Log.e("EXISTS", " " + fileExists);
+                if(fileExists)
+                    os = new AppendingObjectOutputStream(fos);
+                else
+                    os = new ObjectOutputStream(fos);
+                os.writeObject(scoreCard);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if(os != null) os.close();
+                    if(fos != null) fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public ScoreCardRow getNewRow(){

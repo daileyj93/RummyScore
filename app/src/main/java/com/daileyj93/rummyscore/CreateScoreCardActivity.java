@@ -22,9 +22,9 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
     public final static String EXTRA_SCORECARD = "com.daileyj93.rummyscore.SCORECARD";
 
     private EditText editPlayerName;
-    private ArrayList<Player> playerList;
+    private ArrayList<Player> playerList, scoreCardPlayerList;
     private RecyclerView playerListView;
-    RecyclerViewAdapter adapter;
+    RecyclerViewPlayerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +64,16 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
         //create recycler view and adapter
         playerListView = findViewById(R.id.playerListView);
         playerListView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RecyclerViewAdapter(this, playerList);
+        adapter = new RecyclerViewPlayerAdapter(this, playerList, this);
         playerListView.setAdapter(adapter);
+
+        scoreCardPlayerList = new ArrayList<>();
 
         //editText to enter new player name
         editPlayerName = findViewById(R.id.editPlayerName);
         editPlayerName.setOnKeyListener(this);
-        editPlayerName.requestFocus();
+        if(playerList.size() < 1)
+            editPlayerName.requestFocus();
     }
 
     //adds a new player from the textEdit to the playerList
@@ -78,7 +81,7 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
         String name = editPlayerName.getText().toString();
         editPlayerName.setText("");
 
-        if(name != ""){
+        if(name.length() >= 1){
             Player newPlayer = new Player(name);
             playerList.add(newPlayer);
             adapter.notifyItemInserted(playerList.indexOf(newPlayer));
@@ -90,7 +93,7 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
     public void onButtonStartGameClick(View view){
         Intent intent = new Intent(this, ScoreCardLayout.class);
 
-        //save playerList to file
+        //action_save playerList to file
         FileOutputStream fos = null;
         ObjectOutputStream os = null;
         try {
@@ -114,7 +117,7 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
             }
         }
 
-        intent.putExtra(EXTRA_SCORECARD, new ScoreCard(playerList, 500));
+        intent.putExtra(EXTRA_SCORECARD, new ScoreCard(scoreCardPlayerList, 500));
         startActivity(intent);
     }
 
@@ -131,5 +134,15 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
             default:
                 return false;
         }
+    }
+
+    public boolean togglePlayer(Integer pos){
+        if(!scoreCardPlayerList.contains(playerList.get(pos))) {
+            scoreCardPlayerList.add(playerList.get(pos));
+            return true;
+        }
+        if(scoreCardPlayerList.contains(playerList.get(pos)))
+            scoreCardPlayerList.remove(playerList.get(pos));
+        return false;
     }
 }

@@ -18,4 +18,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateScoreCardActivity.class);
         startActivity(intent);
     }
+
+    //saved games button click
+    public void onButtonSavedGamesClick(View view){
+        Intent intent = new Intent(this, SavedGamesActivity.class);
+        startActivity(intent);
+    }
 }
