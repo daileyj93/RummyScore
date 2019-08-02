@@ -12,4 +12,6 @@
     <string name="title_activity_saved_games">SavedGamesActivity</string>
     <string name="games_file_name">savedgames.dat</string>
     <string name="load_game">Load Game</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
 </resources>

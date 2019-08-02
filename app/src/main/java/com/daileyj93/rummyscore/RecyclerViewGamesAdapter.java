@@ -15,6 +15,7 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
     private List<ScoreCard> mData;
     private LayoutInflater mInflater;
     private SavedGamesActivity activity;
+    private int selectionPos;
 
     //constructor initializes inflater and player list
     RecyclerViewGamesAdapter(Context context, List<ScoreCard> data, SavedGamesActivity activity){
@@ -35,6 +36,10 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
     public void onBindViewHolder(@NonNull RecyclerViewGamesAdapter.ViewHolder holder, int position) {
         String gameStr = mData.get(position).toString();
         holder.myTextView.setText(gameStr);
+        if(position == selectionPos)
+            holder.checkmarkImageView.setVisibility(View.VISIBLE);
+        else
+            holder.checkmarkImageView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -57,8 +62,9 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
 
         @Override
         public void onClick(View v) {
-            activity.selectGame(getLayoutPosition());
-            checkmarkImageView.setVisibility(View.VISIBLE);
+            selectionPos = getLayoutPosition();
+            activity.selectGame(selectionPos);
+            notifyDataSetChanged();
         }
     }
 

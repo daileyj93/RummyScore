@@ -22,10 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -201,18 +204,19 @@ public class ScoreCardLayout extends AppCompatActivity {
 			//load all scorecards
 			FileInputStream fis = null;
 			ObjectInputStream is = null;
+            boolean overWrite = false;
 
-			gamesList = new ArrayList<>();
+			ArrayList<ScoreCard> gamesList = new ArrayList<>();
 			try {
 				fis = this.getBaseContext().openFileInput(
 						getResources().getString(R.string.games_file_name));
 				is = new ObjectInputStream(fis);
-				boolean cont = true, overWrite = false;
+				boolean cont = true;
 				while(cont) {
 					ScoreCard game = (ScoreCard) is.readObject();
 					if(game != null) {
 						if(scoreCard.id.equals(game.id)){
-							overWrite = true;
+						    overWrite = true;
 							gamesList.add(scoreCard);
 						}
 						else gamesList.add(game);
@@ -233,6 +237,9 @@ public class ScoreCardLayout extends AppCompatActivity {
 					e.printStackTrace();
 				}
 			}
+
+			if(!overWrite)
+			    gamesList.add(scoreCard);
 			
             //save the scorecard
             FileOutputStream fos = null;
@@ -243,7 +250,7 @@ public class ScoreCardLayout extends AppCompatActivity {
                         Context.MODE_PRIVATE);
                 os = new ObjectOutputStream(fos);
 				for(ScoreCard game : gamesList){
-					os.writeObject(scoreCard);
+					os.writeObject(game);
 				}
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

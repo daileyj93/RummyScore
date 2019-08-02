@@ -6,8 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 
 import java.io.FileInputStream;
@@ -65,6 +70,7 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
         playerListView = findViewById(R.id.playerListView);
         playerListView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RecyclerViewPlayerAdapter(this, playerList, this);
+        adapter.setOnChange(onChange);
         playerListView.setAdapter(adapter);
 
         scoreCardPlayerList = new ArrayList<>();
@@ -145,4 +151,24 @@ public class CreateScoreCardActivity extends AppCompatActivity  implements View.
             scoreCardPlayerList.remove(playerList.get(pos));
         return false;
     }
+
+    private final MenuItem.OnMenuItemClickListener onChange = new MenuItem.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            if(item.getItemId() == 1){
+                return true;
+            }
+            else if(item.getItemId() == 2){
+                Player deletedPlayer = playerList.get(adapter.longClickPosition);
+                playerList.remove(adapter.longClickPosition);
+                if(scoreCardPlayerList.contains(deletedPlayer)) {
+                    scoreCardPlayerList.remove(deletedPlayer);
+                }
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+            return true;
+        }
+    };
 }
