@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -63,12 +65,13 @@ public class SavedGamesActivity extends AppCompatActivity {
         gamesListView = findViewById(R.id.gamesListView);
         gamesListView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RecyclerViewGamesAdapter(this, gamesList, this);
+        adapter.setOnChange(onChange);
         gamesListView.setAdapter(adapter);
     }
 
     //creates the scorecard and passes it to the scoreCardLayoutActivity
     public void onButtonLoadGameClick(View view){
-        Intent intent = new Intent(this, ScoreCardLayout.class);
+        Intent intent = new Intent(this, ScoreCardLayoutActivity.class);
 
         intent.putExtra(EXTRA_SCORECARD, currentGame);
         startActivity(intent);
@@ -77,4 +80,41 @@ public class SavedGamesActivity extends AppCompatActivity {
     public void selectGame(Integer pos){
         currentGame = gamesList.get(pos);
     }
+
+    private final MenuItem.OnMenuItemClickListener onChange = new MenuItem.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            if(item.getItemId() == 1){
+                gamesList.remove(adapter.longClickPosition);
+
+                //save the scorecard
+                FileOutputStream fos = null;
+                ObjectOutputStream os = null;
+                try {
+                    fos = getBaseContext().openFileOutput(
+                            getResources().getString(R.string.games_file_name),
+                            Context.MODE_PRIVATE);
+                    os = new ObjectOutputStream(fos);
+                    for(ScoreCard game : gamesList){
+                        os.writeObject(game);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if(os != null) os.close();
+                        if(fos != null) fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+            return true;
+        }
+    };
 }

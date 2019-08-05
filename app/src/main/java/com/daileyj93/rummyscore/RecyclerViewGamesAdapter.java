@@ -3,7 +3,10 @@ package com.daileyj93.rummyscore;
         import android.content.Context;
         import android.support.annotation.NonNull;
         import android.support.v7.widget.RecyclerView;
+        import android.view.ContextMenu;
         import android.view.LayoutInflater;
+        import android.view.Menu;
+        import android.view.MenuItem;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.ImageView;
@@ -15,7 +18,9 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
     private List<ScoreCard> mData;
     private LayoutInflater mInflater;
     private SavedGamesActivity activity;
+    private MenuItem.OnMenuItemClickListener onChange;
     private int selectionPos;
+    public int longClickPosition;
 
     //constructor initializes inflater and player list
     RecyclerViewGamesAdapter(Context context, List<ScoreCard> data, SavedGamesActivity activity){
@@ -27,7 +32,7 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
     //called when a new ViewHolder is created
     @Override
     public RecyclerViewGamesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.player_list_row, parent, false);
+        View view = mInflater.inflate(R.layout.game_list_row, parent, false);
         return new ViewHolder(view);
     }
 
@@ -47,8 +52,12 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
         return mData.size();
     }
 
+    public void setOnChange(MenuItem.OnMenuItemClickListener listener){
+        onChange = listener;
+    }
+
     //ViewHolder class
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener{
         TextView myTextView;
         ImageView checkmarkImageView;
 
@@ -58,6 +67,7 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
             myTextView = itemView.findViewById(R.id.textPlayerName);
             checkmarkImageView = itemView.findViewById(R.id.imageViewCheck);
             itemView.setOnClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -65,6 +75,16 @@ public class RecyclerViewGamesAdapter extends RecyclerView.Adapter<RecyclerViewG
             selectionPos = getLayoutPosition();
             activity.selectGame(selectionPos);
             notifyDataSetChanged();
+        }
+
+        //inflates edit/delete menu when player list item is long-clicked
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+            longClickPosition = this.getAdapterPosition();
+            menu.setHeaderTitle("Game: " + myTextView.getText());
+            MenuItem delete = menu.add(Menu.NONE, 1, 1, "Delete");
+
+            delete.setOnMenuItemClickListener(onChange);
         }
     }
 

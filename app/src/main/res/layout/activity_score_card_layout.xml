@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ScoreCardLayout">
+    tools:context=".ScoreCardLayoutActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".ScoreCardLayout">
+            tools:context=".ScoreCardLayoutActivity">
 
             <LinearLayout
                 android:id="@+id/labelRowView"

@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class RecyclerViewScoreAdapter extends RecyclerView.Adapter<RecyclerViewScoreAdapter.ViewHolder>{
     private ScoreCard scoreCard;
-    private ScoreCardLayout scoreCardLayout;
+    private ScoreCardLayoutActivity scoreCardLayout;
 
     //constructor sets the scoreCardLayout and scoreCard
-    RecyclerViewScoreAdapter(ScoreCardLayout cardLayout){
+    RecyclerViewScoreAdapter(ScoreCardLayoutActivity cardLayout){
         this.scoreCardLayout = cardLayout;
         this.scoreCard = scoreCardLayout.getScoreCard();
     }
@@ -21,7 +21,7 @@ public class RecyclerViewScoreAdapter extends RecyclerView.Adapter<RecyclerViewS
     //called when a new ViewHolder is created
     @Override
     public RecyclerViewScoreAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ScoreCardLayout.ScoreCardRow scoreCardRow = scoreCardLayout.getNewRow();
+        ScoreCardLayoutActivity.ScoreCardRow scoreCardRow = scoreCardLayout.getNewRow();
         return new ViewHolder(scoreCardRow);
     }
 
@@ -49,13 +49,13 @@ public class RecyclerViewScoreAdapter extends RecyclerView.Adapter<RecyclerViewS
 
     //ViewHolder class
     public class ViewHolder extends RecyclerView.ViewHolder{
-        ScoreCardLayout.ScoreCardRow scoreCardRow;
+        ScoreCardLayoutActivity.ScoreCardRow scoreCardRow;
         Map<Player, TextView> scoreTextViews;
         Map<Player, EditText> scoreEditTexts;
         TextView roundTextView;
 
         //constructor creates textViews from the player_list_row layout
-        ViewHolder(ScoreCardLayout.ScoreCardRow scoreCardRow) {
+        ViewHolder(ScoreCardLayoutActivity.ScoreCardRow scoreCardRow) {
             super(scoreCardRow.llScoreRow);
             this.scoreCardRow = scoreCardRow;
             roundTextView = scoreCardRow.roundTextView;

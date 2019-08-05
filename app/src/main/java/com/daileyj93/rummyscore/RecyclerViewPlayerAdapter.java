@@ -78,7 +78,7 @@ public class RecyclerViewPlayerAdapter extends RecyclerView.Adapter<RecyclerView
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
             longClickPosition = this.getAdapterPosition();
-            menu.setHeaderTitle("Select Action");
+            menu.setHeaderTitle("Player: " + myTextView.getText());
             MenuItem edit = menu.add(Menu.NONE, 1, 1, "Edit");
             MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
 

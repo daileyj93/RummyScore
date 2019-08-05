@@ -14,4 +14,9 @@
     <string name="load_game">Load Game</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
+    <string name="current_game">Current Game</string>
+    <string name="current_game_file_name">currentgame.dat</string>
+    <string name="options_help"><![CDATA[Options & Help]]></string>
+    <string name="game_rules">Rummy Rules</string>
+    <string name="how_to">How To Use Scorecard</string>
 </resources>

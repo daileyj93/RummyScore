@@ -3,6 +3,9 @@ package com.daileyj93.rummyscore;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ScoreCardLayout extends AppCompatActivity {
+public class ScoreCardLayoutActivity extends AppCompatActivity {
     public final static String EXTRA_SCORECARD = "com.daileyj93.rummyscore.SCORECARD";
 
     private ScoreCard scoreCard;
@@ -41,6 +45,7 @@ public class ScoreCardLayout extends AppCompatActivity {
     private Button scoreRoundButton;
     private RecyclerView scoreListView;
     private Toolbar toolbar;
+    private MenuItem saveButton;
 
     public RecyclerViewScoreAdapter adapter;
     public boolean doSetLastForNewRound;
@@ -95,6 +100,9 @@ public class ScoreCardLayout extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        saveButton = menu.getItem(0);
+        saveButton.setEnabled(false);
+        tintMenuIcon(getBaseContext(), saveButton, R.color.colorGrey);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -174,6 +182,9 @@ public class ScoreCardLayout extends AppCompatActivity {
         for (Player p : scoreCard.playerList) {
             scoreTotalTextViews.get(p).setText(scoreCard.getTotal(p).toString());
         }
+        saveCurrentGame();
+        saveButton.setEnabled(true);
+        tintMenuIcon(getBaseContext(), saveButton, R.color.colorViolet);
     }
 
     //adds a new round and updates the scorecard
@@ -193,6 +204,36 @@ public class ScoreCardLayout extends AppCompatActivity {
         scoreRoundButton.setText(R.string.score_round);
         addRound();
         doSetLastForNewRound = true;
+        saveCurrentGame();
+    }
+
+    private boolean saveCurrentGame(){
+        boolean result = false;
+
+        //save the scorecards
+        FileOutputStream fos = null;
+        ObjectOutputStream os = null;
+        try {
+            fos = this.getBaseContext().openFileOutput(
+                    getResources().getString(R.string.current_game_file_name),
+                    Context.MODE_PRIVATE);
+            os = new ObjectOutputStream(fos);
+            os.writeObject(scoreCard);
+            result = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(os != null) os.close();
+                if(fos != null) fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
     }
 
     //on actionbar click
@@ -241,7 +282,7 @@ public class ScoreCardLayout extends AppCompatActivity {
 			if(!overWrite)
 			    gamesList.add(scoreCard);
 			
-            //save the scorecard
+            //save the scorecards
             FileOutputStream fos = null;
             ObjectOutputStream os = null;
             try {
@@ -252,6 +293,11 @@ public class ScoreCardLayout extends AppCompatActivity {
 				for(ScoreCard game : gamesList){
 					os.writeObject(game);
 				}
+                Toast.makeText(this, "Game Saved", Toast.LENGTH_SHORT).show();
+                saveButton.setEnabled(false);
+                tintMenuIcon(getBaseContext(), saveButton, R.color.colorGrey);
+
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -312,7 +358,6 @@ public class ScoreCardLayout extends AppCompatActivity {
                                 if (!rowEditText.getText().toString().equals("")) {
                                     rowTextView.setText(Integer.toString(Integer.parseInt(
                                             rowEditText.getText().toString())));
-                                    Log.i("row edit text:", rowEditText.getText().toString());
                                     scoreCardRow.updatePlayerScore(rowEditText);
                                 }
                                 rowEditText.setText("");
@@ -359,6 +404,14 @@ public class ScoreCardLayout extends AppCompatActivity {
             if(row != null)
                 row.scoreCardRow.validateRound();
         }
+    }
+
+    private void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {
+        Drawable normalDrawable = item.getIcon();
+        Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
+        DrawableCompat.setTint(wrapDrawable, context.getResources().getColor(color));
+
+        item.setIcon(wrapDrawable);
     }
 
     public class ScoreCardRow{
