@@ -6,7 +6,8 @@
     android:layout_gravity="center_vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OptionsHelpActivity">
+    tools:context=".OptionsHelpActivity"
+    android:background="@drawable/background_main">
 
     <Button
         android:id="@+id/buttonGameRules"
@@ -14,7 +15,8 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:onClick="onButtonGameRulesClick"
-        android:text="@string/game_rules" />
+        android:text="@string/game_rules"
+        android:background="@drawable/score_round_button_bg"/>
 
     <Button
         android:id="@+id/buttonHowTo"
@@ -22,7 +24,8 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:onClick="onButtonHowToClick"
-        android:text="@string/how_to" />
+        android:text="@string/how_to"
+        android:background="@drawable/score_round_button_bg"/>
 
     <Button
         android:id="@+id/buttonOptions"
@@ -30,6 +33,7 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:onClick="onButtonOptionsClick"
-        android:text="@string/saved_games" />
+        android:text="@string/saved_games"
+        android:background="@drawable/score_round_button_bg"/>
 
 </LinearLayout>

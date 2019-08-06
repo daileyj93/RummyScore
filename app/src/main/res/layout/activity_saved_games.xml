@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:background="@drawable/background_main">
 
     <TextView
         android:id="@+id/textSavedGames"
@@ -18,13 +19,15 @@
         android:id="@+id/gamesListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".5" />
+        android:layout_weight=".5"
+        android:background="#50FFFFFF"/>
 
     <Button
         android:id="@+id/buttonLoadGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onButtonLoadGameClick"
-        android:text="@string/load_game" />
+        android:text="@string/load_game"
+        android:background="@drawable/score_round_button_bg"/>
 
 </LinearLayout>
